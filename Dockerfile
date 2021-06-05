@@ -11,7 +11,7 @@ RUN apt-get update && \
     apt-get install python3-pip -y && \
     ln -s /usr/bin/pip3 /usr/bin/pip
 
-
+RUN apt-get install cron
 
 RUN pip install -r requirements.txt && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
