@@ -11,3 +11,4 @@ six==1.10.0
 amqp==2.4.0
 tblib==1.4.0
 pandas==1.0.5
+pymysql==1.0.2
