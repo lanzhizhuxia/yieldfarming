@@ -1,0 +1,1 @@
+*/1 * * * * . /etc/profile; python3 /crawl/poolList.py >> /var/log/crawl.log 2>&1
