@@ -22,4 +22,5 @@ RUN apt-get -y install cron
 RUN service cron start
 RUN crontab /crawl/crontabfile
 
+#ENTRYPOINT ["/bin/bash", "/crawl/run.sh"]
 CMD  service cron restart && echo `date` >> /var/log/crawl.log && tail -f /var/log/crawl.log
