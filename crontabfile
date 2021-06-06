@@ -1,2 +1,2 @@
-0 0/1 * * * ?   . /etc/profile; python3 /crawl/run.py >> /var/log/crawl.log 2>&1
+*/1 * * * * . /etc/profile; python3 /crawl/run.py >> /var/log/crawl.log 2>&1
 
