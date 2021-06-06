@@ -54,6 +54,7 @@ def main():
     headers = {'User-Agent': user_agent}
 
     now = datetime.datetime.now()
+    engine = create_engine('mysql+pymysql://root:123456@3.115.88.92:3306/mysql?charset=utf8')
 
     print('==========UPDATE poolList START===========')
 
@@ -86,8 +87,6 @@ def main():
         poolList2 = save_poolList_mysql(poolList)
         result = result.append(poolList2)
 
-    #result.to_csv('poolList.csv')
-    engine = create_engine('mysql+pymysql://root:123456@3.115.88.92:3306/mysql?charset=utf8')
     dtypedict = {'projectid': TEXT,'projectname': TEXT,'projectplatform': TEXT,'dailyROI': DECIMAL(18, 8),'yearlyROI': DECIMAL(18, 8),'name': TEXT, 'pair': TEXT, 'link': TEXT, 'rewards': TEXT,'totalStake': DECIMAL(18, 8),'impermanentLoss': TEXT, 'updateTime': DateTime,'creatDate': DateTime}
     result.to_sql(name='poolList', con=engine, chunksize=1000, if_exists='append', index=None,dtype=dtypedict)
 
@@ -133,12 +132,52 @@ def main():
     df['creatDate'] = now
     # print(df)
     # df.to_csv('marketCap.csv')
-    engine = create_engine('mysql+pymysql://root:123456@3.115.88.92:3306/mysql?charset=utf8')
+
     dtypedict = {'rank': TEXT, 'company_name': TEXT, 'country': TEXT, 'Price': DECIMAL(18, 8), 'Today': DECIMAL(18, 8),
                  'MarketCap': TEXT, 'creatDate': DateTime}
     df.to_sql(name='marketCap', con=engine, chunksize=1000, if_exists='append', index=None, dtype=dtypedict)
 
     print('==========UPDATE marketCap END===========')
+
+    print('==========UPDATE validator START===========')
+    url = "https://beaconscan.com/stat/validator"
+    response = requests.get(url, headers=headers)
+    response.encoding = 'utf8'
+    doc = pq(response.text)
+
+    plotData = doc("script[type='text/javascript']")
+    plotDataStr = plotData.text()
+    strlist = plotDataStr.split('eval(')[1].split(');')
+    plotDataList = eval(strlist[0])
+    plotDataDf = pd.DataFrame(plotDataList)
+
+    plotDataDf.rename(columns={0: 'timestamp', 1: 'totalValidators', 2: 'c', 3: 'd'}, inplace=True)
+    plotDataDf = plotDataDf.drop(['c', 'd'], axis=1)
+    plotDataDf['creatDate'] = now
+
+    dtypedict = {'timestamp': TEXT, 'totalValidators': TEXT,'creatDate': DateTime}
+    plotDataDf.to_sql(name='validator', con=engine, chunksize=1000, if_exists='append', index=None, dtype=dtypedict)
+
+    print('==========UPDATE validator END===========')
+    print('==========UPDATE validatortotaldailyincome START===========')
+
+    url = "https://beaconscan.com/stat/validatortotaldailyincome"
+    response = requests.get(url, headers=headers)
+    response.encoding = 'utf8'
+    doc = pq(response.text)
+
+    plotData = doc("script[type='text/javascript']")
+    plotDataStr = plotData.text()
+    strlist = plotDataStr.split('eval(')[1].split(');')
+    plotDataList = eval(strlist[0])
+    plotDataDf = pd.DataFrame(plotDataList)
+
+    plotDataDf.rename(columns={0: 'timestamp', 1: 'totalDailyIncome', 2: 'avgDailyIncome'}, inplace=True)
+    plotDataDf['creatDate'] = now
+
+    dtypedict = {'timestamp': TEXT, 'totalDailyIncome': TEXT, 'avgDailyIncome': TEXT, 'creatDate': DateTime}
+    plotDataDf.to_sql(name='income', con=engine, chunksize=1000, if_exists='append', index=None, dtype=dtypedict)
+    print('==========UPDATE validatortotaldailyincome END===========')
 
 if __name__ == '__main__':
     main()
