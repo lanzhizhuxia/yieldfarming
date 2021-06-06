@@ -84,7 +84,7 @@ def main():
         result = result.append(poolList2)
 
     #result.to_csv('poolList.csv')
-    engine = create_engine('mysql+pymysql://root:123456@3.115.89.92:3306/mysql')
+    engine = create_engine('mysql+pymysql://root:123456@3.115.88.92:3306/mysql?charset=utf8')
     dtypedict = {'projectid': TEXT,'projectname': TEXT,'projectplatform': TEXT,'dailyROI': DECIMAL(18, 8),'yearlyROI': DECIMAL(18, 8),'name': TEXT, 'pair': TEXT, 'link': TEXT, 'rewards': TEXT,'totalStake': DECIMAL(18, 8),'impermanentLoss': TEXT, 'updateTime': DateTime,'creatDate': DateTime}
     result.to_sql(name='poolList', con=engine, chunksize=1000, if_exists='append', index=None,dtype=dtypedict)
 

@@ -69,10 +69,10 @@ def main():
     df=pd.DataFrame(ll)
     df['company_name']=dfcn['company_name']
     df['creatDate'] = now
-    print(df)
+    #print(df)
     #df.to_csv('marketCap.csv')
-    engine = create_engine('mysql+pymysql://root:123456@3.115.89.92:3306/mysql')
-    dtypedict = {'rank': TEXT,'company_name': TEXT,'country': TEXT,'Price': DECIMAL(18, 8),'Today': DECIMAL(18, 8),'MarketCap': DECIMAL(18, 8),'creatDate': DateTime}
+    engine = create_engine('mysql+pymysql://root:123456@3.115.88.92:3306/mysql?charset=utf8')
+    dtypedict = {'rank': TEXT,'company_name': TEXT,'country': TEXT,'Price': DECIMAL(18, 8),'Today': DECIMAL(18, 8),'MarketCap': TEXT,'creatDate': DateTime}
     df.to_sql(name='marketCap', con=engine, chunksize=1000, if_exists='append', index=None,dtype=dtypedict)
 
 
