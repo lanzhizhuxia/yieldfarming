@@ -114,8 +114,18 @@ def main():
 
         rank = i[0].text
         # company-name
-        if rank == 'Rank':
+        if rank == 'Rank':ß
             continue
+
+        categoryClass = i.get('class')
+        if categoryClass == 'precious-metals-outliner':
+            category = 'precious metals'
+        elif categoryClass == 'crypto-outliner':
+            category = 'cryptocurrencies'
+        elif categoryClass == 'etf-outliner':
+            category = 'ETFs'
+        else:
+            category = 'public companies'
 
         j = {
             'rank': rank,
@@ -123,15 +133,10 @@ def main():
             'Price': i[3].get('data-sort'),
             'Today': i[4].values()[0],
             'country': i[6].getchildren()[0].text,
+            'category': category,
         }
         # print(j)
         ll.append(j)
-
-    df = pd.DataFrame(ll)
-    df['company_name'] = dfcn['company_name']
-    df['creatDate'] = now
-    # print(df)
-    # df.to_csv('marketCap.csv')
 
     dtypedict = {'rank': TEXT, 'company_name': TEXT, 'country': TEXT, 'Price': DECIMAL(18, 8), 'Today': DECIMAL(18, 8),
                  'MarketCap': TEXT, 'creatDate': DateTime}
