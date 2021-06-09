@@ -138,9 +138,15 @@ def main():
         # print(j)
         ll.append(j)
 
-    dtypedict = {'rank': TEXT, 'company_name': TEXT, 'country': TEXT, 'Price': DECIMAL(18, 8), 'Today': DECIMAL(18, 8),
+    df = pd.DataFrame(ll)
+    df['company_name'] = dfcn['company_name']
+    df['creatDate'] = now
+    # print(df)
+    # df.to_csv('marketCap.csv')
+    dtypedict = {'rank': TEXT, 'company_name': TEXT, 'country': TEXT, 'category': TEXT, 'Price': DECIMAL(18, 8), 'Today': DECIMAL(18, 8),
                  'MarketCap': TEXT, 'creatDate': DateTime}
     df.to_sql(name='marketCap', con=engine, chunksize=1000, if_exists='append', index=None, dtype=dtypedict)
+    #df.to_csv('ma.csv')
 
     print('==========UPDATE marketCap END===========')
 
