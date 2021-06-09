@@ -114,7 +114,7 @@ def main():
 
         rank = i[0].text
         # company-name
-        if rank == 'Rank':ß
+        if rank == 'Rank':
             continue
 
         categoryClass = i.get('class')
